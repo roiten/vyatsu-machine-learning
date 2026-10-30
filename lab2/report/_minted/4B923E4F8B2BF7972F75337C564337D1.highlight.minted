@@ -1,0 +1,15 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{backward\PYGZus{}numpy}\PYG{p}{(}\PYG{n}{cache}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{parameters}\PYG{p}{,} \PYG{n}{l2}\PYG{o}{=}\PYG{l+m+mf}{0.0}\PYG{p}{):}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{Z1}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{P} \PYG{o}{=} \PYG{n}{cache}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}X\PYGZdq{}}\PYG{p}{],} \PYG{n}{cache}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Z1\PYGZdq{}}\PYG{p}{],} \PYG{n}{cache}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}H\PYGZdq{}}\PYG{p}{],} \PYG{n}{cache}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}P\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{m} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+    \PYG{n}{dZ2} \PYG{o}{=} \PYG{n}{P}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{()}
+    \PYG{n}{dZ2}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{arange}\PYG{p}{(}\PYG{n}{m}\PYG{p}{),} \PYG{n}{y}\PYG{p}{]} \PYG{o}{\PYGZhy{}=} \PYG{l+m+mf}{1.0}
+    \PYG{n}{dZ2} \PYG{o}{/=} \PYG{n}{m}                      \PYG{c+c1}{\PYGZsh{} (P \PYGZhy{} Y) / m}
+    \PYG{n}{dW2} \PYG{o}{=} \PYG{n}{H}\PYG{o}{.}\PYG{n}{T} \PYG{o}{@} \PYG{n}{dZ2} \PYG{o}{+} \PYG{n}{l2} \PYG{o}{*} \PYG{n}{parameters}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}W2\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{db2} \PYG{o}{=} \PYG{n}{dZ2}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n}{dH} \PYG{o}{=} \PYG{n}{dZ2} \PYG{o}{@} \PYG{n}{parameters}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}W2\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{T}
+    \PYG{n}{dZ1} \PYG{o}{=} \PYG{n}{dH} \PYG{o}{*} \PYG{p}{(}\PYG{n}{Z1} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{)}           \PYG{c+c1}{\PYGZsh{} ReLU derivative}
+    \PYG{n}{dW1} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{T} \PYG{o}{@} \PYG{n}{dZ1} \PYG{o}{+} \PYG{n}{l2} \PYG{o}{*} \PYG{n}{parameters}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}W1\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{db1} \PYG{o}{=} \PYG{n}{dZ1}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{k}{return} \PYG{p}{\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}W1\PYGZdq{}}\PYG{p}{:} \PYG{n}{dW1}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}b1\PYGZdq{}}\PYG{p}{:} \PYG{n}{db1}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}W2\PYGZdq{}}\PYG{p}{:} \PYG{n}{dW2}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}b2\PYGZdq{}}\PYG{p}{:} \PYG{n}{db2}\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

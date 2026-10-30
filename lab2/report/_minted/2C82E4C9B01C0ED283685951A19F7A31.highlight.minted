@@ -1,0 +1,16 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{train}\PYG{p}{()}                    \PYG{c+c1}{\PYGZsh{} Dropout is active only in training}
+\PYG{k}{for} \PYG{n}{X\PYGZus{}batch}\PYG{p}{,} \PYG{n}{y\PYGZus{}batch} \PYG{o+ow}{in} \PYG{n}{train\PYGZus{}loader}\PYG{p}{:}
+    \PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{zero\PYGZus{}grad}\PYG{p}{()}        \PYG{c+c1}{\PYGZsh{} do not accumulate old gradients}
+    \PYG{n}{logits} \PYG{o}{=} \PYG{n}{model}\PYG{p}{(}\PYG{n}{X\PYGZus{}batch}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{DEVICE}\PYG{p}{))}
+    \PYG{n}{loss} \PYG{o}{=} \PYG{n}{criterion}\PYG{p}{(}\PYG{n}{logits}\PYG{p}{,} \PYG{n}{y\PYGZus{}batch}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{DEVICE}\PYG{p}{))}   \PYG{c+c1}{\PYGZsh{} logits, not softmax}
+    \PYG{n}{loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+    \PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{step}\PYG{p}{()}
+\PYG{n}{val\PYGZus{}metrics}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}} \PYG{o}{=} \PYG{n}{evaluate\PYGZus{}model}\PYG{p}{(}\PYG{n}{model}\PYG{p}{,} \PYG{n}{val\PYGZus{}loader}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} eval + no\PYGZus{}grad}
+\PYG{k}{if} \PYG{n}{val\PYGZus{}metrics}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}loss\PYGZdq{}}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}val\PYGZus{}loss} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{1e\PYGZhy{}5}\PYG{p}{:}
+    \PYG{n}{best\PYGZus{}val\PYGZus{}loss} \PYG{o}{=} \PYG{n}{val\PYGZus{}metrics}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}loss\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{best\PYGZus{}state} \PYG{o}{=} \PYG{n}{copy}\PYG{o}{.}\PYG{n}{deepcopy}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{state\PYGZus{}dict}\PYG{p}{())}
+    \PYG{n}{epochs\PYGZus{}without\PYGZus{}improvement} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{n}{epochs\PYGZus{}without\PYGZus{}improvement} \PYG{o}{+=} \PYG{l+m+mi}{1}
+\end{MintedVerbatim}
